@@ -11,8 +11,8 @@ resizeCanvas();
 //window.addEventListener('resize', resizeCanvas());
 
 const cellsize = 7;
-const rows = Math.floor(canvas.height / cellsize)
-const cols = Math.floor(canvas.width / cellsize)
+const rows = Math.ceil(canvas.height / cellsize)
+const cols = Math.ceil(canvas.width / cellsize)
 let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
 
 let antx = Math.floor(cols/2);
