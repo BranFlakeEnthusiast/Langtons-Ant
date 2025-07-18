@@ -9,9 +9,9 @@ function resizeCanvas() {
 
 resizeCanvas();
 
-const cellsize = 7;
-const rows = Math.ceil(canvas.height / cellsize)
-const cols = Math.ceil(canvas.width / cellsize)
+let cellsize = 7;
+let rows = Math.ceil(canvas.height / cellsize)
+let cols = Math.ceil(canvas.width / cellsize)
 let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
 
 let antx = Math.floor(cols/2);
@@ -51,12 +51,15 @@ pause.addEventListener('click', () => {
 });
 
 restart.addEventListener('click', () => {
+    cellsize = parseInt(document.getElementById('cellSize').value);
+    rows = Math.ceil(canvas.height / cellsize);
+    cols = Math.ceil(canvas.width / cellsize);
     grid = Array.from({ length: rows }, () => Array(cols).fill(0));
     antx = Math.floor(cols / 2);
     anty = Math.floor(rows / 2);
-    direction = parseInt(document.getElementById("directionSelect").value);    running = true;
+    direction = parseInt(document.getElementById("directionSelect").value);
+    running = true;
     pause.innerHTML = running === true ? "⏸":"▶";
-
 });
 
 maxbtn.addEventListener('click', () => {
