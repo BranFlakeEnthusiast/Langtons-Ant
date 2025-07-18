@@ -9,7 +9,7 @@ function resizeCanvas() {
 
 resizeCanvas();
 
-let cellsize = 7;
+let cellsize = 6;
 let rows = Math.ceil(canvas.height / cellsize)
 let cols = Math.ceil(canvas.width / cellsize)
 let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
