@@ -36,6 +36,7 @@ const content = document.querySelector('.content');
 
 pause.addEventListener('click', () => {
     running = !running
+    pause.innerHTML = running === true ? "⏸":"▶";
 });
 
 maxbtn.addEventListener('click', () => {
