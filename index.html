@@ -16,10 +16,21 @@
         </div>
         <div class="content hidden">
             <div class="startdir">
-
+                <label for="directionSelect">Start Direction:</label>
+                <select id="directionSelect">
+                    <option value="0">Up</option>
+                    <option value="1">Right</option>
+                    <option value="2">Down</option>
+                    <option value="3">Left</option>
+                </select>
+            </div>
+            <div class="speed">
+                <label for="speedSlider">Speed</label>
+                <input type="range" id="speedSlider" min="1" max="10000" value="60">
             </div>
             <div class="controls">
                 <button id="pausebtn">⏸</button>
+                <button id="restartbtn">⟳</button>
             </div>
         </div>
     </div>

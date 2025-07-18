@@ -18,7 +18,7 @@ canvas{
     position: fixed;
     right: 0;
     top: 0;
-    background-color: rgb(52, 52, 52, 0.5);
+    background-color: rgb(52, 52, 52, 0.8);
     border-radius: 0.5em;
     border-style: solid;
     border-width: 0.15em;
@@ -46,12 +46,47 @@ button:hover {
     background-color: rgb(255,255,255,0.75);
     color:black;
 }
-
-.hidden {
-    display:none
+.header{
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-bottom: 1em;
+    padding-top: 0.25em;
 }
+
 
 h3{
     font-weight: 500;
     color: white;
+    margin: 0;
+}
+label{
+    color: white;
+    font-size: small;
+}
+select{
+    border: none;
+    background: none;
+    color: white;
+    background-color: rgb(52, 52, 52);
+    border-radius: 0.25em;
+    position: absolute;
+    right:1em;
+}
+
+#minbtn{
+    position: absolute;
+    right: 0;
+}
+
+.startdir{
+    padding-bottom: 0.5em;
+}
+
+.speed{
+    padding-bottom: 0.5em;
+}
+
+.hidden {
+    display:none
 }

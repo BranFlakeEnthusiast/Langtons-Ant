@@ -8,7 +8,6 @@ function resizeCanvas() {
 }
 
 resizeCanvas();
-//window.addEventListener('resize', resizeCanvas());
 
 const cellsize = 7;
 const rows = Math.ceil(canvas.height / cellsize)
@@ -17,7 +16,7 @@ let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
 
 let antx = Math.floor(cols/2);
 let anty = Math.floor(rows/2);
-let direction = 0;
+let direction = parseInt(document.getElementById("directionSelect").value);
 
 let translateX = 0
 let translateY = 0
@@ -34,9 +33,30 @@ const minbtn = document.getElementById('minbtn');
 const header = document.querySelector('.header');
 const content = document.querySelector('.content');
 
+let steps = 60;
+let lastTime = 0;
+let accumulator = 0;
+const speedSlider = document.getElementById('speedSlider');
+const speedValue = document.getElementById('speedValue');
+
+let rawmin = 10;
+let rawmax = 10000;
+let logmin = Math.log(rawmin);
+let logmax = Math.log(rawmax);
+let sliderScale = (logmax - logmin)/(rawmax - rawmin)
+
 pause.addEventListener('click', () => {
     running = !running
     pause.innerHTML = running === true ? "⏸":"▶";
+});
+
+restart.addEventListener('click', () => {
+    grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+    antx = Math.floor(cols / 2);
+    anty = Math.floor(rows / 2);
+    direction = parseInt(document.getElementById("directionSelect").value);    running = true;
+    pause.innerHTML = running === true ? "⏸":"▶";
+
 });
 
 maxbtn.addEventListener('click', () => {
@@ -86,19 +106,36 @@ function draw() {
     ctx.fillRect(antx * cellsize, anty * cellsize, cellsize, cellsize);
 }
 
-function update() {
-    if (running){
-    stepAnt();
+speedSlider.addEventListener('input', () => {
+    rawSteps = parseInt(speedSlider.value);
+    logSteps = logmin + sliderScale*(rawSteps-rawmin);
+    steps = 1000/Math.floor(Math.exp(logSteps));
+});
+
+function update(timestamp) {
+  if (!lastTime) lastTime = timestamp;
+  const delta = timestamp - lastTime;
+  lastTime = timestamp;
+
+  if (running) {
+    accumulator += delta;
+
+    while (accumulator >= steps) {
+      stepAnt();
+      accumulator -= steps;
+    }
+
     draw();
-    };
-    requestAnimationFrame(update);   
+  }
+
+  requestAnimationFrame(update);
 }
 
 function updateTransform() {
   canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
 
-window.addEventListener('mousedown', (e) => {
+canvas.addEventListener('mousedown', (e) => {
     isDragging = true;
     lastX = e.clientX;
     lastY = e.clientY;
@@ -127,5 +164,4 @@ window.addEventListener('wheel', (e) => {
 }, {passive: false});
 
 draw();
-update();
-
+requestAnimationFrame(update);
