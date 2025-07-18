@@ -2,6 +2,8 @@ body{
     margin: 0;
     overflow: hidden;
     background-color: #575757;
+    font-family: "Lucida Console";
+
 }
 
 canvas{
@@ -31,8 +33,25 @@ h3{
 
 button{
     margin:0;
+    transition-duration: 0.4s;
+    background: none;
+    border: none;
+    color: white;
+    font-size: large;
+    border-radius: 0.25em;
+
+}
+
+button:hover {
+    background-color: rgb(255,255,255,0.75);
+    color:black;
 }
 
 .hidden {
     display:none
+}
+
+h3{
+    font-weight: 500;
+    color: white;
 }

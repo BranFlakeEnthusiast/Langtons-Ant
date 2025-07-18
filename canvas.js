@@ -25,6 +25,31 @@ let scale = 1
 let isDragging = false;
 let lastX, lastY;
 
+let running = true
+const pause = document.getElementById('pausebtn');
+const restart = document.getElementById('restartbtn');
+
+const maxbtn = document.getElementById('maxbtn');
+const minbtn = document.getElementById('minbtn');
+const header = document.querySelector('.header');
+const content = document.querySelector('.content');
+
+pause.addEventListener('click', () => {
+    running = !running
+});
+
+maxbtn.addEventListener('click', () => {
+    maxbtn.classList.add('hidden');
+    header.classList.remove('hidden');
+    content.classList.remove('hidden');
+});
+
+minbtn.addEventListener('click', () => {
+    maxbtn.classList.remove('hidden');
+    header.classList.add('hidden');
+    content.classList.add('hidden');
+});
+
 function stepAnt(){
     const currentColor = grid[anty][antx];
 
@@ -61,9 +86,11 @@ function draw() {
 }
 
 function update() {
+    if (running){
     stepAnt();
     draw();
-    requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);   
 }
 
 function updateTransform() {
