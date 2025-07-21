@@ -26,6 +26,7 @@ const restart = document.getElementById('restartbtn');
 const rulesToggle = document.getElementById('rulesToggle');
 const rulesBox = document.getElementById('rulesBox')
 const startDir = document.getElementById('directionSelect');
+const randomise = document.getElementById('randomisebtn');
 
 const maxbtn = document.getElementById('maxbtn');
 const minbtn = document.getElementById('minbtn');
@@ -40,7 +41,7 @@ const speedSlider = document.getElementById('speedSlider');
 const speedValue = document.getElementById('speedValue');
 
 let rawmin = 10;
-let rawmax = 50000;
+let rawmax = 100000;
 let logmin = Math.log(rawmin);
 let logmax = Math.log(rawmax);
 let sliderScale = (logmax - logmin)/(rawmax - rawmin)
@@ -51,6 +52,8 @@ let direction = 0;
 let state = 0
 
 const colours = ['black','white','magenta','yellow','lime','cyan','red','orange','blue','hotpink','orchid','blueviolet'];
+const turnDirs = ['R','L','U','N','^','>','⌄','<']
+
 let rules = [
     [
         ['R', 1, 0],
@@ -72,7 +75,7 @@ pause.addEventListener('click', () => {
     pause.innerHTML = running === true ? "⏸":"▶";
 });
 
-restart.addEventListener('click', () => {
+function reset() {
     rules = JSON.parse(rulesBox.value);
     cellsize = parseInt(document.getElementById('cellSize').value);
     rows = Math.ceil(canvas.height / cellsize);
@@ -80,9 +83,14 @@ restart.addEventListener('click', () => {
     grid = Array.from({ length: rows }, () => Array(cols).fill(0));
     antx = Math.floor(cols / 2);
     anty = Math.floor(rows / 2);
+    state = 0
     direction = parseInt(startDir.value);
     running = true;
-    pause.innerHTML = running === true ? "⏸":"▶";
+    pause.innerHTML = running === true ? "⏸":"▶";    
+}
+
+restart.addEventListener('click', () => {
+    reset()
 });
 
 maxbtn.addEventListener('click', () => {
@@ -95,6 +103,32 @@ minbtn.addEventListener('click', () => {
     maxbtn.classList.remove('hidden');
     header.classList.add('hidden');
     content.classList.add('hidden');
+});
+
+randomise.addEventListener('click', () => {
+    const numColours = Math.ceil(Math.random()*11);
+    const numStates = Math.ceil(Math.random()*5);
+    const randRules = [];
+    for (let s = 0; s < numStates; s++) {
+        const stateRules = [];
+        for (let c = 0; c < numColours; c++) {
+            const randDir = turnDirs[Math.floor(Math.random()*turnDirs.length)];
+            const randColour = Math.floor(Math.random()*numColours);
+            const randState = Math.floor(Math.random()*numStates);
+            stateRules.push([randDir,randColour,randState]);
+        }
+        randRules.push(stateRules)
+    }
+    let formatted = "[\n";
+    formatted += randRules.map(state =>
+        "    [\n" +
+        state.map(rule => `        ["${rule[0]}", ${rule[1]}, ${rule[2]}]`).join(",\n") +
+        "\n    ]"
+    ).join(",\n");
+    formatted += "\n]";
+
+    rulesBox.value = formatted;
+    reset();
 });
 
 function stepAnt(){
