@@ -14,10 +14,6 @@ let rows = Math.ceil(canvas.height / cellsize)
 let cols = Math.ceil(canvas.width / cellsize)
 let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
 
-let antx = Math.floor(cols/2);
-let anty = Math.floor(rows/2);
-let direction = parseInt(document.getElementById("directionSelect").value);
-
 let translateX = 0
 let translateY = 0
 let scale = 1
@@ -27,11 +23,15 @@ let lastX, lastY;
 let running = true
 const pause = document.getElementById('pausebtn');
 const restart = document.getElementById('restartbtn');
+const rulesToggle = document.getElementById('rulesToggle');
+const rulesBox = document.getElementById('rulesBox')
+const startDir = document.getElementById('directionSelect');
 
 const maxbtn = document.getElementById('maxbtn');
 const minbtn = document.getElementById('minbtn');
 const header = document.querySelector('.header');
 const content = document.querySelector('.content');
+const rulesEditor = document.querySelector('.rulesEditor')
 
 let steps = 60;
 let lastTime = 0;
@@ -45,19 +45,42 @@ let logmin = Math.log(rawmin);
 let logmax = Math.log(rawmax);
 let sliderScale = (logmax - logmin)/(rawmax - rawmin)
 
+let antx = Math.floor(cols/2);
+let anty = Math.floor(rows/2);
+let direction = 0;
+let state = 0
+
+const colours = ['black','white','magenta','yellow','lime','cyan','red','orange','blue','hotpink','orchid','blueviolet'];
+let rules = [
+    [
+        ['R', 1, 0],
+        ['L', 0, 0]
+    ]
+]
+
+
+rulesToggle.addEventListener('click', () =>{
+    if (rulesToggle.checked === true){
+        rulesEditor.classList.remove('hidden');
+    } else {
+        rulesEditor.classList.add('hidden');
+    }
+});
+
 pause.addEventListener('click', () => {
     running = !running
     pause.innerHTML = running === true ? "⏸":"▶";
 });
 
 restart.addEventListener('click', () => {
+    rules = JSON.parse(rulesBox.value);
     cellsize = parseInt(document.getElementById('cellSize').value);
     rows = Math.ceil(canvas.height / cellsize);
     cols = Math.ceil(canvas.width / cellsize);
     grid = Array.from({ length: rows }, () => Array(cols).fill(0));
     antx = Math.floor(cols / 2);
     anty = Math.floor(rows / 2);
-    direction = parseInt(document.getElementById("directionSelect").value);
+    direction = parseInt(startDir.value);
     running = true;
     pause.innerHTML = running === true ? "⏸":"▶";
 });
@@ -76,20 +99,35 @@ minbtn.addEventListener('click', () => {
 
 function stepAnt(){
     const currentColor = grid[anty][antx];
+    const turn = rules[state][currentColor][0];
 
-    if (currentColor === 0) {
-        direction = (direction + 1) % 4;
-        grid[anty][antx] = 1;
-    } else {
-        direction = (direction + 3) % 4;
-        grid[anty][antx] = 0;
+    switch(turn) {
+        case 'R':
+            direction = (direction + 1) % 4; break;
+        case 'L':
+            direction = (direction + 3) % 4; break;
+        case 'U':
+            direction = (direction + 2) % 4; break;
+        case 'N': break;
+        case '^':
+            direction = 0; break;
+        case '>':
+            direction = 1; break;
+        case '⌄':
+            direction = 2; break;
+        case '<':
+            direction = 3; break;
     }
 
+    grid[anty][antx] = rules[state][currentColor][1];
+
+    state = rules [state][currentColor][2];
+
     switch (direction) {
-    case 0: anty--; break;
-    case 1: antx++; break;
-    case 2: anty++; break;
-    case 3: antx--; break;
+        case 0: anty--; break;
+        case 1: antx++; break;
+        case 2: anty++; break;
+        case 3: antx--; break;
     }
 
     antx = (antx + cols) % cols;
@@ -101,7 +139,7 @@ function draw() {
 
     for(let y=0; y < rows; y++) {
         for(let x=0; x < cols; x++) {
-            ctx.fillStyle = grid[y][x] === 1 ? 'white' : 'black';
+            ctx.fillStyle = colours[grid[y][x]];
             ctx.fillRect(x * cellsize, y * cellsize, cellsize, cellsize);
         }
     }
@@ -158,7 +196,7 @@ window.addEventListener('mousemove', (e) => {
 
 window.addEventListener('mouseup', () => isDragging = false);
 
-window.addEventListener('wheel', (e) => {
+canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
     const zoomIntensity = 0.001;
     const zoom = 1 - e.deltaY * zoomIntensity;

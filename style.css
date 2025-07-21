@@ -78,6 +78,13 @@ select{
     position: absolute;
     right: 0;
 }
+.toggles{
+    padding-bottom: 0.5em;
+}
+
+.rulesEditor{
+    padding-bottom: 0.5em;
+}
 
 .startdir{
     padding-bottom: 0.5em;
