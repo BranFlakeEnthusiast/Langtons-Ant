@@ -40,7 +40,7 @@ const speedSlider = document.getElementById('speedSlider');
 const speedValue = document.getElementById('speedValue');
 
 let rawmin = 10;
-let rawmax = 10000;
+let rawmax = 50000;
 let logmin = Math.log(rawmin);
 let logmax = Math.log(rawmax);
 let sliderScale = (logmax - logmin)/(rawmax - rawmin)
