@@ -1,2 +1,12 @@
 # Langtons Ant
-Currently a basic simulation of Langton's ant, I will be expanding this to be able to simulate turmites with several colours and states.
+Turmite simulator with several colours and states
+
+use the ⟳ button to apply any changes
+
+custom rules are formatted as such:
+
+[   <-- rules array
+    [   <-- each of these elements is a state
+        ['turn direction',write colour, next state]  <-- this defines how the ant acts on a colour
+    ]
+]
